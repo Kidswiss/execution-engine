@@ -12,16 +12,16 @@ import (
 // and then removes the items in priority order.
 func main() {
 
-	config := prio.ExecutionConfig{
+	data := prio.ExecutionData{
 		Tenant: "test",
 	}
 
 	fmt.Println("First run")
-	prio.Execute(&synv1alpha1.GitRepo{}, config, "common")
+	prio.Execute(&synv1alpha1.GitRepo{}, data, "common")
 
 	fmt.Println("Second run")
-	prio.Execute(&synv1alpha1.GitRepo{}, config, "common", "wasting")
+	prio.Execute(&synv1alpha1.GitRepo{}, data, "common", "wasting")
 
 	fmt.Println("Third run")
-	prio.Execute(&synv1alpha1.GitRepo{}, config, "wasting")
+	prio.Execute(&synv1alpha1.GitRepo{}, data, "wasting")
 }

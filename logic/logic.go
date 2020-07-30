@@ -20,18 +20,18 @@ const (
 	DeleteProtectionAnnotation = "syn.tools/protected-delete"
 )
 
-func addAnnotation(obj metav1.Object, config prio.ExecutionConfig) prio.ExecutionReturn {
+func addAnnotation(obj metav1.Object, data prio.ExecutionData) prio.ExecutionReturn {
 	annotations := obj.GetAnnotations()
 	if annotations == nil {
 		annotations = make(map[string]string)
 	}
-	annotations[apis.LabelNameTenant] = config.Tenant
+	annotations[apis.LabelNameTenant] = data.Tenant
 	obj.SetAnnotations(annotations)
 	fmt.Println(annotations)
 	return prio.ExecutionReturn{}
 }
 
-func addDeletionProtection(obj metav1.Object, config prio.ExecutionConfig) prio.ExecutionReturn {
+func addDeletionProtection(obj metav1.Object, data prio.ExecutionData) prio.ExecutionReturn {
 	protected, err := strconv.ParseBool("true")
 	if err != nil {
 		protected = true
@@ -54,7 +54,7 @@ func addDeletionProtection(obj metav1.Object, config prio.ExecutionConfig) prio.
 	return prio.ExecutionReturn{}
 }
 
-func timeWasting(obj metav1.Object, config prio.ExecutionConfig) prio.ExecutionReturn {
+func timeWasting(obj metav1.Object, data prio.ExecutionData) prio.ExecutionReturn {
 	fmt.Println("just wasting time")
 	return prio.ExecutionReturn{}
 }

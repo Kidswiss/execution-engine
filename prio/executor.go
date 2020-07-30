@@ -9,24 +9,24 @@ var (
 	pq = newPriorityQueue()
 )
 
-type ExecutionConfig struct {
+type ExecutionData struct {
 	Annotation    string
 	FinalizerName string
 	Tenant        string
 }
 
-func Register(function ItemFunc, prio int, tags []string) {
-	pq.add(&Item{
+func Register(function StepFunc, prio int, tags []string) {
+	pq.add(&Step{
 		priority: prio,
 		function: function,
 		tags:     tags,
 	})
 }
 
-func Execute(object metav1.Object, config ExecutionConfig, tags ...string) error {
+func Execute(object metav1.Object, data ExecutionData, tags ...string) error {
 	taskList := pq.filterByTags(tags)
 	for taskList.Len() > 0 {
-		result := taskList.get().function(object, config)
+		result := taskList.get().function(object, data)
 		if result.err != nil || result.abort {
 			return result.err
 		}

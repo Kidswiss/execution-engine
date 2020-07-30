@@ -5,7 +5,7 @@ import (
 )
 
 // A PriorityQueue implements heap.Interface and holds Items.
-type PriorityQueue []*Item
+type PriorityQueue []*Step
 
 func (pq PriorityQueue) Len() int { return len(pq) }
 
@@ -21,9 +21,9 @@ func (pq PriorityQueue) Swap(i, j int) {
 
 func (pq *PriorityQueue) Push(x interface{}) {
 	n := len(*pq)
-	item := x.(*Item)
-	item.index = n
-	*pq = append(*pq, item)
+	step := x.(*Step)
+	step.index = n
+	*pq = append(*pq, step)
 }
 
 func (pq *PriorityQueue) Pop() interface{} {
@@ -36,21 +36,22 @@ func (pq *PriorityQueue) Pop() interface{} {
 	return item
 }
 
-func (pq *PriorityQueue) add(item *Item) {
-	heap.Push(pq, item)
+func (pq *PriorityQueue) add(step *Step) {
+	heap.Push(pq, step)
 }
 
-func (pq *PriorityQueue) get() *Item {
-	return heap.Pop(pq).(*Item)
+func (pq *PriorityQueue) get() *Step {
+	return heap.Pop(pq).(*Step)
 }
 
 // update modifies the priority and value of an Item in the queue.
-func (pq *PriorityQueue) update(item *Item, function ItemFunc, priority int) {
-	item.function = function
-	item.priority = priority
-	heap.Fix(pq, item.index)
+func (pq *PriorityQueue) update(step *Step, function StepFunc, priority int) {
+	step.function = function
+	step.priority = priority
+	heap.Fix(pq, step.index)
 }
 
+// filterByTags returns a new queue only containing the steps with the tags.
 func (pq PriorityQueue) filterByTags(tags []string) *PriorityQueue {
 
 	newPq := PriorityQueue{}
@@ -64,13 +65,14 @@ func (pq PriorityQueue) filterByTags(tags []string) *PriorityQueue {
 	return &newPq
 }
 
+// newPriorityQueue returns a new, empty queue.
 func newPriorityQueue() *PriorityQueue {
 	pq := make(PriorityQueue, 0)
 	heap.Init(&pq)
 	return &pq
 }
 
-// Checks if the slice of strings contains a specific string
+// sliceContainsStrings checks if the slice of strings contains a specific string
 func sliceContainsStrings(list []string, compare []string) bool {
 	for _, s := range compare {
 		for _, v := range list {
